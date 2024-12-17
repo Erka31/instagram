@@ -5,7 +5,7 @@ const {
   users,
   unfollow,
   register,
-} = require("../../server/controllers/userController");
+} = require("../controllers/userController");
 const userRoute = Route();
 
 userRoute.post("/signup", signup);
