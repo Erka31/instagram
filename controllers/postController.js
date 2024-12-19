@@ -3,7 +3,7 @@ const userModel = require("../models/userSchema");
 
 const posts = async (req, res) => {
   try {
-    const posts = await postModel.find();
+    const posts = await postModel.find().populate('userId', 'profileImg username');
     console.log(posts);
     res.status(200).json(posts);
   } catch (error) {
