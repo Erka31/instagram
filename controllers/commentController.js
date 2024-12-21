@@ -39,5 +39,23 @@ const uncomment = async (req, res) => {
   }
 };
 
+const comments = async (req, res) => {
+  const { postId } = req.params;
+  console.log(postId, "hahahahahahah");
+  try {
+    // const response = await postModel.findById(postId, "comments");
+    const comment = await postModel.findById(postId).populate({
+      path: "comments",
+      populate: {
+        path: "userId",
+        select: "username profileImg",
+      },
+    });
+    res.send(comment);
+  } catch (error) {
+    res.send("err");
+    console.log(error);
+  }
+};
 
-module.exports = { comment, uncomment };
+module.exports = { comment, uncomment, comments };
