@@ -6,7 +6,7 @@ const {
   comments,
 } = require("../controllers/commentController");
 
-commentRoute.post("/comment", comment);
+commentRoute.post("/comment/:id", comment);
 commentRoute.post("/uncomment", uncomment);
 commentRoute.get("/getComment/:postId", comments);
 

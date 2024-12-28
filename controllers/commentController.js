@@ -44,7 +44,7 @@ const comments = async (req, res) => {
   console.log(postId, "hahahahahahah");
   try {
     const comment = await postModel.findById(postId).populate({
-      path: "comment",
+      path: "comments",
       populate: {
         path: "userId",
         select: "username profileImg",
