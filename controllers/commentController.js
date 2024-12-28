@@ -10,7 +10,7 @@ const comment = async (req, res) => {
       userId,
     });
     await postModel.findByIdAndUpdate(postId, {
-      $push: {
+      $addToSet: {
         comment: newComment._id,
       },
     });
@@ -41,7 +41,6 @@ const uncomment = async (req, res) => {
 
 const comments = async (req, res) => {
   const { postId } = req.params;
-  console.log(postId, "hahahahahahah");
   try {
     const comment = await postModel.findById(postId).populate({
       path: "comments",
