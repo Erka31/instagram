@@ -2,59 +2,38 @@ const postModel = require("../models/postSchema");
 
 const like = async (req, res) => {
   const { userId, postId } = req.body;
-
-  if (!userId || !postId) {
-    return res.status(400).json({ error: "User ID and Post ID are required" });
-  }
-
   try {
-    const response = await postModel.findByIdAndUpdate(
+    const newLike = {
       postId,
-      {
-        $addToSet: { likes: userId },
+      userId,
+    };
+    await postModel.findByIdAndUpdate(postId, {
+      $addToSet: {
+        like: userId,
       },
-      { new: true }
-    );
-
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
+    });
+    res.status(200).json(newLike);
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
 const unlike = async (req, res) => {
   const { userId, postId } = req.body;
-
-  if (!userId || !postId) {
-    return res.status(400).json({ error: "User ID and Post ID are required" });
-  }
-
   try {
-    const response = await postModel.findByIdAndUpdate(postId, {
-      $pull: { likes: userId },
+    const deletedLike = {
+      postId,
+      userId,
+    };
+    await postModel.findByIdAndUpdate(postId, {
+      $pull: {
+        like: userId,
+      },
     });
-
-    res.json(response);
-  } catch (err) {
-    res.status(500).json(err);
+    res.status(200).json(deletedLike);
+  } catch (error) {
+    throw new Error(error);
   }
 };
 
-const checkLikeStatus = async (req, res) => {
-  const { postId, userId } = req.body;
-
-  if (!userId || !postId) {
-    return res.status(400).json({ error: "User ID and Post ID are required" });
-  }
-
-  try {
-    const post = await postModel.findById(postId);
-    const isLiked = post.like.includes(userId);
-
-    res.json({ isLiked });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-};
-
-module.exports = { like, unlike, checkLikeStatus };
+module.exports = { like, unlike };
