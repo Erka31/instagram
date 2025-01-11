@@ -4,7 +4,7 @@ const {
   signup,
   users,
   unfollow,
-  register,
+  oneUser,
 } = require("../controllers/userController");
 const userRoute = Route();
 
@@ -16,6 +16,6 @@ userRoute.post("/follow", follow);
 
 userRoute.post("/unfollow", unfollow);
 
-userRoute.post("/register", register);
+userRoute.get("/oneUser/:userId", oneUser);
 
 module.exports = userRoute;

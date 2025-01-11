@@ -13,7 +13,6 @@ const signup = async (req, res) => {
       profileImg,
     });
 
-    
     const token = jwt.sign(
       {
         userId: response._id,
@@ -22,9 +21,9 @@ const signup = async (req, res) => {
       process.env.JWT_SECRET,
       { expiresIn: "24h" }
     );
-    res.status(201).json({token});
+    res.status(201).json({ token, message: "User registered successfully" });
   } catch (error) {
-    res.status(500).json({ message: `failed to create user ${error}` });
+    res.status(500).json({ message: `Registration failed ${error}` });
   }
 };
 
@@ -79,17 +78,22 @@ const unfollow = async (req, res) => {
   }
 };
 
-const register = async (req, res) => {
+const oneUser = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-   await userModel.create({username, password: hashedPassword,})
-
-    res.status(201).json({ message: "User registered successfully" });
+    const { userId } = req.params;
+    const user = await userModel
+      .findById(userId)
+      .populate("posts", "caption postImg");
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.status(200).json(user);
   } catch (error) {
-    res.status(500).json({ error: "Registration failed" });
+    console.error(error);
+    res
+      .status(500)
+      .json({ message: "Something went wrong", error: error.message });
   }
 };
 
-module.exports = { follow, signup, users, unfollow, register };
+module.exports = { follow, signup, users, unfollow, oneUser };
